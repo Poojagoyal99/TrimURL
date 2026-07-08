@@ -1,0 +1,21 @@
+# Dependencies (will be reinstalled inside container)
+node_modules/
+
+# Build output (will be rebuilt inside container)
+dist/
+
+# Environment variables
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
