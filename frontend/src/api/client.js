@@ -1,8 +1,12 @@
 import axios from 'axios'
 
-// All API calls go to Django backend on port 8000
+// In production: VITE_API_URL is set in Vercel environment variables
+// In development: falls back to localhost Django server
+const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+
+// All API calls go to Django backend
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -69,7 +73,7 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const { data } = await axios.post('http://127.0.0.1:8000/api/auth/token/refresh/', {
+        const { data } = await axios.post(`${API_BASE}/api/auth/token/refresh/`, {
           refresh: refreshToken,
         })
 

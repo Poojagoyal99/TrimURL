@@ -16,12 +16,6 @@ export default function Login({ onLogin }) {
     if (error) setError('')  // fade out error as soon as user starts correcting
   }
 
-  // Quick-fill the admin credentials with one click
-  function fillAdmin() {
-    setForm({ username: 'admin', password: 'admin123' })
-    setError('')
-  }
-
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
@@ -62,20 +56,7 @@ export default function Login({ onLogin }) {
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Sign in to manage your links</p>
           </div>
 
-          {/* Quick-fill hint for admin */}
-          <div className="mb-5 p-3 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-blue-700 dark:text-blue-400">👑 Admin access</p>
-              <p className="text-xs text-blue-600 dark:text-blue-500 mt-0.5">username: <b>admin</b> · password: <b>admin123</b></p>
-            </div>
-            <button
-              type="button"
-              onClick={fillAdmin}
-              className="text-xs px-3 py-1.5 rounded-lg bg-blue-600 text-white font-semibold
-                         hover:bg-blue-700 transition-all duration-200 active:scale-95 shrink-0">
-              Fill
-            </button>
-          </div>
+
 
           {/* Error banner — always rendered, fades in/out smoothly */}
           <div className={`mb-4 px-4 py-3 rounded-lg border text-sm flex items-center gap-2
