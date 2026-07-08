@@ -203,19 +203,14 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 # ── Email Configuration ───────────────────────────────────────────────────────
 # In development: prints emails to the console (no real email sent)
 # In production:  set EMAIL_BACKEND to smtp and fill in the SMTP vars via .env
-EMAIL_BACKEND = os.environ.get(
-    'EMAIL_BACKEND',
-    'django.core.mail.backends.console.EmailBackend'  # default: dev mode
-)
-
-# SMTP settings — only needed when EMAIL_BACKEND is set to smtp in production
-EMAIL_HOST          = os.environ.get('EMAIL_HOST',          'smtp.gmail.com')
+EMAIL_BACKEND       = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST          = os.environ.get('EMAIL_HOST',          'smtp.resend.com')
 EMAIL_PORT          = int(os.environ.get('EMAIL_PORT',      587))
 EMAIL_USE_TLS       = os.environ.get('EMAIL_USE_TLS',       'True') == 'True'
 EMAIL_USE_SSL       = os.environ.get('EMAIL_USE_SSL',       'False') == 'True'
-EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER',     '')
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER',     'resend')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL',  'TrimURL <noreply@trimurl.com>')
+DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL',  'TrimURL <onboarding@resend.dev>')
 
 
 # Celery Beat Schedule
