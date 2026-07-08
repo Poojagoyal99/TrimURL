@@ -50,13 +50,14 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
-# Allow React dev server to call the API
+# Allow React dev server + production Vercel URL to call the API
+_frontend_url = os.environ.get('FRONTEND_URL', '')
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'http://localhost:80',
     'http://localhost',
-]
+] + ([_frontend_url] if _frontend_url else [])
 
 # Allow Authorization header and credentials
 CORS_ALLOW_HEADERS = [
@@ -68,8 +69,9 @@ CORS_ALLOW_HEADERS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',   # must be FIRST
+    'corsheaders.middleware.CorsMiddleware',         # must be FIRST
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',     # static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -123,14 +125,24 @@ SIMPLE_JWT = {
 
 
 # Database
+# Uses DATABASE_URL env var in production (PostgreSQL on Supabase/Render)
+# Falls back to SQLite for local development
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
+
+if DATABASE_URL:
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -160,7 +172,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL  = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # where collectstatic puts files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Redis base URL — reads from env var, falls back to localhost for local dev
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379')
